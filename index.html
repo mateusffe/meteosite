@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do Tempo</title>
+    <style>
+		body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+	}
+
+	.container {
+		background-color: #fff;
+		border-radius: 8px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		padding: 20px;
+		max-width: 600px;
+		width: 90%;
+	}
+
+	.weather-info, .clothing-suggestion {
+		margin-bottom: 20px;
+	}
+
+	h1, h2 {
+		text-align: center;
+	}
+
+	#current-weather {
+		text-align: center;
+	}
+
+	#clothing-types {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		margin-top: 10px;
+	}
+
+	.clothing-type {
+		cursor: pointer;
+		padding: 8px 12px;
+		background-color: #007bff;
+		color: #fff;
+		border-radius: 4px;
+	}
+
+	.clothing-type:hover {
+		background-color: #0056b3;
+	}
+
+	#clothing-results {
+		margin-top: 20px;
+	}
+
+	.result {
+		margin-bottom: 10px;
+		padding: 10px;
+		background-color: #e9ecef;
+		border-radius: 4px;
+	}
+
+	</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Previsão do Tempo</h1>
+        <div class="weather-info">
+            <h2>Condições Atuais</h2>
+            <div id="current-weather">
+			
+			</div>
+        </div>
+        <div class="clothing-suggestion">
+            <h2>Sugestão de Roupas</h2>
+            <p>Escolha um tipo de tecido:</p>
+            <div id="clothing-types"></div>
+            <div id="clothing-results"></div>
+        </div>
+    </div>
+
+    <script>
+		document.addEventListener('DOMContentLoaded', function () {
+			
+
+			const currentWeatherDiv = document.getElementById('current-weather');
+			const clothingTypesDiv = document.getElementById('clothing-types');
+			const clothingResultsDiv = document.getElementById('clothing-results');
+			
+			
+			fetch("http://apiadvisor.climatempo.com.br/api/v1/weather/locale/4823/current?token=eb1dd8ea4f34495404f9dc4e7a36a618")
+				.then(response => response.json()) 
+				.then(data =>{
+					console.log(data)
+				})
+
+		})
+	</script>
+</body>
+</html>
