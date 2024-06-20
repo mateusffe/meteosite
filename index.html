@@ -1,107 +1,255 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE HTML>
+<html lang='pt-br'>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previsão do Tempo</title>
+    <meta charset='UTF-8'>
+    <title>Meteosite</title>
     <style>
-		body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-	}
-
-	.container {
-		background-color: #fff;
-		border-radius: 8px;
-		box-shadow: 0 0 10px rgba(0,0,0,0.1);
-		padding: 20px;
-		max-width: 600px;
-		width: 90%;
-	}
-
-	.weather-info, .clothing-suggestion {
-		margin-bottom: 20px;
-	}
-
-	h1, h2 {
-		text-align: center;
-	}
-
-	#current-weather {
-		text-align: center;
-	}
-
-	#clothing-types {
-		display: flex;
-		justify-content: center;
-		gap: 10px;
-		margin-top: 10px;
-	}
-
-	.clothing-type {
-		cursor: pointer;
-		padding: 8px 12px;
-		background-color: #007bff;
-		color: #fff;
-		border-radius: 4px;
-	}
-
-	.clothing-type:hover {
-		background-color: #0056b3;
-	}
-
-	#clothing-results {
-		margin-top: 20px;
-	}
-
-	.result {
-		margin-bottom: 10px;
-		padding: 10px;
-		background-color: #e9ecef;
-		border-radius: 4px;
-	}
-
-	</style>
+        * { margin:0 auto; padding:0; border:none;box-sizing:border-box;font-family:Arial }
+        .container {
+            background-color:#F8F9F9;
+            max-width:55vw;
+            width:55vw;
+            height:55vh;
+            display: grid;
+            border: 1px solid #F2F3F4;
+            border-radius: 7px;
+            margin-top:8em;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+            "imagem temperatura temperatura"
+            "roupas roupas roupas"
+            "roupas roupas roupas";
+        }
+        .imagem {
+            grid-area: imagem;
+            width:100%;
+            height:100%;
+            display:flex;
+            flex-direction: row;
+            justify-content:center;
+            align-items:center;
+        }
+        .temperatura {
+            grid-area: temperatura;
+            padding:10px;
+            width:100%;
+            height:100%
+        }
+        #imagem_clima {
+            width:150px;
+            height:150px;
+        }
+        .dados {
+            padding:10px;
+            width:100%;
+            height:100%;
+        }
+        #cidade {
+            font-size:25px;
+            font-weight:bold ;
+        }
+        .roupas {
+            grid-area:roupas;
+            width:100%;
+            height:100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 0px 0px;
+            grid-template-areas:
+            "escolha escolha escolha"
+            "roupa-resultado roupa-resultado roupa-resultado";
+        }
+        #flexi1 {
+            width:100%;
+            height:100%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            grid-area: escolha;
+        }
+        #flexi2 {
+            width:100%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            grid-area: roupa-resultado;
+        }
+        button {
+            cursor:pointer;
+            border:none;
+            margin:5px;
+            text-align:center;
+            padding:10px 32px;
+            border-radius:7px;
+            background-color:#F9E79F;
+            color:#000000;
+            font-weight:bold;
+        }
+        #roupa_info {
+            font-size:25px;
+            font-weight:bold;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Previsão do Tempo</h1>
-        <div class="weather-info">
-            <h2>Condições Atuais</h2>
-            <div id="current-weather">
-			
-			</div>
+        <div class="imagem">
+            <img id="imagem_clima" src="sol.png">
         </div>
-        <div class="clothing-suggestion">
-            <h2>Sugestão de Roupas</h2>
-            <p>Escolha um tipo de tecido:</p>
-            <div id="clothing-types"></div>
-            <div id="clothing-results"></div>
+        <div class="temperatura">
+            <div class="dados">
+                <span id="cidade">Passo de Torres</span><br>
+                <span id="dt">12/05/2024</span><br>
+                <b>Temperatura: <span id="temp"></span> C°</b><br>
+                <b>Vento: <span id="vento"></span> km/h</b><br>
+                <b>Umidade: <span id="umidade"></span></b><br>
+                <b>Condicao: <span id="cond"></span></b><br>
+            </div>
+        </div>
+        <div class="roupas">
+            <div id="flexi1">
+                <button type='button' id="btn1">Lã</button>
+                <button type='button' id="bt2">Poliéster</button>
+                <button type='button' id="bt3">Algodão</button>
+            </div>
+            <div id="flexi2">
+                <span id="roupa_info"><span> Horas para secar</span></span>
+            </div>
         </div>
     </div>
 
     <script>
-		document.addEventListener('DOMContentLoaded', function () {
-			
+        document.addEventListener('DOMContentLoaded', function(event) {
+            const cidade = document.getElementById("cidade");
+            const dt = document.getElementById("dt");
+            const temp = document.getElementById("temp");
+            const vento = document.getElementById("vento");
+            const umidade = document.getElementById("umidade");
+            const condicao = document.getElementById("cond");
+            const img = document.getElementById("imagem_clima")
+            let t = 0, u = 0, v = 0, c = '';
 
-			const currentWeatherDiv = document.getElementById('current-weather');
-			const clothingTypesDiv = document.getElementById('clothing-types');
-			const clothingResultsDiv = document.getElementById('clothing-results');
-			
-			
-			fetch("https://apiadvisor.climatempo.com.br/api/v1/weather/locale/4823/current?token=eb1dd8ea4f34495404f9dc4e7a36a618")
-				.then(response => response.json()) 
-				.then(data =>{
-					console.log(data)
-				})
+            fetch('https://api.hgbrasil.com/weather?woeid=26795194&format=json-cors&key=21bdcef1')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    cidade.innerHTML = data.results.city;
+                    dt.innerHTML = data.results.date;
+                    temp.innerHTML = data.results.temp;
+                    condicao.innerHTML = data.results.description;
+                    vento.innerHTML = data.results.wind_speedy;
+                    umidade.innerHTML = data.results.humidity;
 
-		})
-	</script>
+                    if(data.results.description =="Tempo nublado"){
+                        img.src = 'nublado.png';
+                    }else if(data.results.description == "Tempo limpo"){
+                        img.src = 'sol.png';
+                    }else if(data.results.description == 'chuva'){
+                        img.src ='chuva.png';
+                    }
+                    t = data.results.temp;
+                    v = parseFloat(data.results.wind_speedy.replace(" km/h", ""));
+                    u = data.results.humidity;
+                    c = data.results.condition_slug;
+                });
+
+            const roupainfo = document.getElementById("roupa_info");
+            const btn1 = document.getElementById("btn1");
+            const btn2 = document.getElementById("bt2");
+            const btn3 = document.getElementById("bt3");
+
+            function converter(minutos) {
+                let horas = Math.floor(minutos / 60);
+                let min = minutos % 60;
+                const tHoras = (`00${horas}`).slice(-2);
+                const tMinutos = (`00${min}`).slice(-2);
+                return `${tHoras}:${tMinutos}`;
+            }
+
+            function tempoSecagem(tp, c, t, v, u) {
+                let tempo_base = 0;
+
+                if (tp == 1) {
+                    tempo_base = 151;
+                } else if (tp == 2) {
+                    tempo_base = 62;
+                } else if (tp == 3) {
+                    tempo_base = 93;
+                }
+
+                switch (c) {
+                    case 'rain':
+                        tempo_base += 15;
+                        break;
+                    case 'cloudly_day':
+                        tempo_base += 10;
+                        break;
+                    case 'clear_day':
+                        tempo_base -= 5;
+                        break;
+                    default:
+                        tempo_base -= 1;
+                        break;
+                }
+
+                if (t >= 40) {
+                    tempo_base -= 15;
+                } else if (t >= 30) {
+                    tempo_base -= 10;
+                } else if (t >= 20) {
+                    tempo_base -= 5;
+                } else if (t < 20) {
+                    tempo_base += 2;
+                }
+
+                if (v > 20) {
+                    tempo_base -= 15;
+                } else if (v > 10) {
+                    tempo_base -= 10;
+                } else if (v < 10) {
+                    tempo_base -= 3;
+                }
+
+                if (u >= 50) {
+                    tempo_base += 10;
+                } else if (u < 50) {
+                    tempo_base -= 10;
+                }
+
+                return tempo_base;
+            }
+
+            btn1.addEventListener("click", () => {
+                if (c && t && u && v) {
+                    let la = tempoSecagem(1, c, t, v, u);
+                    roupainfo.innerHTML = converter(la) + " Horas para secar";
+                } else {
+                    console.log("Os dados ainda não foram carregados.");
+                }
+            });
+
+            btn2.addEventListener("click", () => {
+                if (c && t && u && v) {
+                    let poliester = tempoSecagem(2, c, t, v, u);
+                    roupainfo.innerHTML = converter(poliester) + " Horas para secar";
+                } else {
+                    console.log("Os dados ainda não foram carregados.");
+                }
+            });
+
+            btn3.addEventListener("click", () => {
+                if (c && t && u && v) {
+                    let algodao = tempoSecagem(3, c, t, v, u);
+                    roupainfo.innerHTML = converter(algodao) + " Horas para secar";
+                } else {
+                    console.log("Os dados ainda não foram carregados.");
+                }
+            });
+        });
+    </script>
 </body>
 </html>
